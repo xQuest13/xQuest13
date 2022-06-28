@@ -1,0 +1,92 @@
+game.Players.LocalPlayer.Character.Humanoid:UnequipTools()
+		if game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Axe") then
+			local Adrix = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+			game.Players.LocalPlayer.Character.Humanoid:UnequipTools()
+			game.Players.LocalPlayer.Backpack["Axe"].Parent = game:GetService("Players").LocalPlayer
+
+
+			local BG = Instance.new('BodyGyro', game:GetService("Players").LocalPlayer.Character.Torso)
+			local BV     = Instance.new('BodyVelocity', game:GetService("Players").LocalPlayer.Character.Torso)
+			BG.P         = 9e4
+			BG.maxTorque = Vector3.new(9e9, 9e9, 9e9)
+			BG.cframe    = game:GetService("Players").LocalPlayer.Character.Torso.CFrame
+			BV.velocity  = Vector3.new(0, 0, 0)
+			BV.maxForce  = Vector3.new(9e9, 9e9, 9e9)
+
+			function onTouched(part)       
+				local h = part
+				if h.Name == "Block" and h.Parent.Name == "Ores" then
+					game.Players.LocalPlayer["Axe"].RemoteEvent:FireServer(h)  
+				end
+			end
+
+			function AdriIsABaby()
+				Partz              = Instance.new("Part")
+				Partz.Parent       = workspace
+				Partz.Transparency = 1
+				Partz.CanCollide   = false
+				Partz.Massless     = true
+				Partz.Position     = game.Players.LocalPlayer.Character.Head.Position
+				Partz.Size         = Vector3.new(34,38,34)
+
+				local bruh = Partz.Touched:connect(onTouched)
+				wait()
+				bruh:Disconnect()
+				Partz:Destroy()
+			end
+
+			function ban()
+				AdriIsABaby()
+			end
+			game:GetService('Players').LocalPlayer.Character.Humanoid.CameraOffset = Vector3.new(0,10,0)
+			function Time()
+				wait(0.0019)  
+			end
+			ct = {}
+			for i,v in pairs(game:GetService("Players").LocalPlayer.Character:GetChildren()) do
+				if v:IsA("BasePart") then 
+					table.insert(ct,game:GetService('RunService').Stepped:connect(function()
+						v.CanCollide = false
+					end))
+				end
+			end
+			local plr = game.Players.LocalPlayer
+
+			function ah()
+				BG:Destroy()
+				BV:Destroy()
+				plr.Character.Humanoid.PlatformStand = false
+				for i,v in pairs(ct) do v:Disconnect() end
+			end
+
+			for i,v in next,workspace:GetDescendants() do
+				if v.Name == "Block" and v.Parent.Name == "Ores" then
+					plr.Character.Humanoid.PlatformStand = true
+					repeat
+						Time()
+						ban()
+						plr.Character.HumanoidRootPart.CFrame = v.CFrame + Vector3.new(0,1,0)
+					until v.Name ~= "Block" or not plr:FindFirstChild("Axe") 
+					Time()
+				end
+			end
+
+
+			plr:FindFirstChild("Axe").Parent = plr.Backpack
+			game.StarterGui:SetCore("SendNotification", {
+				Title    = "No blocks in game.."; 
+				Text     = ""; 
+				Duration = 3;
+			})  
+			ah()
+			game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = Adrix
+			game:GetService('Players').LocalPlayer.Character.Humanoid.CameraOffset = Vector3.new(0,0,0)
+			plr:FindFirstChild("Axe").Parent = plr.Backpack
+			---
+		else
+			game.StarterGui:SetCore("SendNotification", {
+				Title    = "Ok.";
+				Text     = "";
+				Duration = 0.5;
+			})
+		end
